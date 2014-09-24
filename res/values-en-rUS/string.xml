@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="toast">Hello, humans!</string>
+    <string name="app_name">RiseOfApes</string>
+    <string name="txt01">Word of mouth science fiction epic</string>
+    <string name="txt02">The sequel shock return</string>
+    <string name="txt03">This is the peaceful coexistence</string>
+    <string name="txt04">The last chance</string>
+    <string name="txt05">Rise of the planet of the Apes</string>
+    <string name="txt06">Dawn of war</string>
+    <string name="txt07">August 29th</string>
+    <string name="txt08">3D shock release</string>
+</resources>

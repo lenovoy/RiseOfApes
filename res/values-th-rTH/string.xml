@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="toast">สวัสดีมนุษย์！</string>
+    <string name="app_name">การเพิ่มขึ้นของโลกของลิง</string>
+    <string name="txt01">ปากต่อปากนิยายวิทยาศาสตร์มหากาพย์</string>
+    <string name="txt02">ผลสืบเนื่องกลับมาช็อต</string>
+    <string name="txt03">นี่คือการอยู่ร่วมกันอย่างสันติ</string>
+    <string name="txt04">โอกาสสุดท้าย</string>
+    <string name="txt05">การเพิ่มขึ้นของโลกของลิง</string>
+    <string name="txt06">รุ่งอรุณของการต่อสู้</string>
+    <string name="txt07">29 สิงหาคม</string>
+    <string name="txt08">ปล่อยช็อต 3D</string>
+</resources>

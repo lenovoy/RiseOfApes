@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="toast">你好，人类！</string>
+    <string name="app_name">猩球崛起</string>
+    <string name="txt01">口碑科幻巨作</string>
+    <string name="txt02">续集震撼归来</string>
+    <string name="txt03">这是和平共存的</string>
+    <string name="txt04">最后机会</string>
+    <string name="txt05">猩球崛起</string>
+    <string name="txt06">黎明之战</string>
+    <string name="txt07">8月29日</string>
+    <string name="txt08">3D震撼上映</string>
+    
+</resources>
