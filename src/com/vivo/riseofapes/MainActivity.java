@@ -1,13 +1,13 @@
 package com.vivo.riseofapes;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), R.string.toast, Toast.LENGTH_LONG).show();
+				startActivity(new Intent(MainActivity.this,DetailActivity.class));
 			}
 		});
         
