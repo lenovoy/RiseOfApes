@@ -7,24 +7,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 
 
 public class MainActivity extends Activity {
 
 	private ImageView imag;
-	
+	private Button titleBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_main);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
+        titleBtn=(Button)findViewById(R.id.titleBtn);
         imag=(ImageView)findViewById(R.id.imag1);
-        imag.setOnClickListener(new OnClickListener() {
+        titleBtn.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				startActivity(new Intent(MainActivity.this,DetailActivity.class));
+				overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 			}
 		});
         

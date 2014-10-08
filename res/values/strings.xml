@@ -4,5 +4,6 @@
     <string name="app_name">RiseOfApes</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="detail_of_film">影片详情</string>
 
 </resources>

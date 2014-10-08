@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -33,12 +35,14 @@ public class DetailActivity extends Activity {
 	private ExpandableListView expandView;
 	private List<String> group;
 	private List<List<String>> child;
+	private BaseExpandableListAdapter adapter;
 	
 	
 	public void initialData(){
 		group=new ArrayList<String>();
 		child=new ArrayList<List<String>>();
-		for(int i=0;i<7;i++)
+		adapter = new InfoAdapter(DetailActivity.this);
+		for(int i=0;i<8;i++)
 			child.add(new ArrayList<String>());
 		group.add("µ¼ÑÝ");
 		group.add("±à¾ç");
@@ -105,7 +109,10 @@ public class DetailActivity extends Activity {
 		public View getGroupView(int groupPosition, boolean isExpanded,
 				View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			return getGenericView(group.get(groupPosition));
+			TextView view=getGenericView(group.get(groupPosition));
+			view.setTextSize(25);
+			view.getPaint().setFakeBoldText(true);
+			return view;
 		}
 
 		@SuppressLint("HandlerLeak")
@@ -113,7 +120,9 @@ public class DetailActivity extends Activity {
 		public View getChildView(int groupPosition, int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			return getGenericView(child.get(groupPosition).get(childPosition));
+			TextView view=getGenericView(child.get(groupPosition).get(childPosition));
+			view.setTextSize(15);
+			return view;
 		}
 
 		@Override
@@ -122,76 +131,120 @@ public class DetailActivity extends Activity {
 			return false;
 		}
 		
+		@Override
+		public void onGroupExpanded(int groupPosition) {
+			if(child.get(groupPosition).size()!=0)
+				return;
+			final int groupPos=groupPosition;
+			final String groupName=String.valueOf(groupPosition);
+			Runnable runnable=new Runnable(){
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					String url="http://172.20.200.148:8080/Servlet/apes";
+					HttpPost httpPost=new HttpPost(url);
+					ArrayList<NameValuePair> params=new ArrayList<NameValuePair>();
+					params.add(new BasicNameValuePair("itemName",groupName));
+					HttpResponse httpResponse=null;
+					
+					try {
+						httpPost.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+						httpResponse=new DefaultHttpClient().execute(httpPost);
+						if(httpResponse.getStatusLine().getStatusCode()==200){
+							String result=EntityUtils.toString(httpResponse.getEntity());
+							
+//							mHandler.obtainMessage(groupPos,URLDecoder.decode(result, "utf-8")).sendToTarget();;
+							Message message=mHandler.obtainMessage(groupPos,URLDecoder.decode(result, "utf-8") );
+							mHandler.sendMessageDelayed(message, 5000);
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			};
+			Log.i("qqqqqqqqqqqqqqqqqqqq", "waht");
+			new Thread(runnable).start();
+	    }
+		
+		Handler mHandler=new Handler(){
+
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				if(child.get(msg.what).size()==0)
+					child.get(msg.what).add((String)msg.obj);
+				
+				adapter.notifyDataSetChanged();
+			}
+			
+		};
+		
 		public TextView getGenericView(String s){
-			AbsListView.LayoutParams lp=new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,64);
+			AbsListView.LayoutParams lp=new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,80);
 			TextView view=new TextView(activity);
 			view.setLayoutParams(lp);
 			view.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
-			view.setPadding(80, 0, 0, 0);
+			view.setPadding(80, 5, 0, 5);
 			view.setText(s);
 			return view;
 		}
 		
 	}
 	
-	Handler mHandler=new Handler(){
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			if(child.get(msg.what).size()==0)
-				child.get(msg.what).add((String)msg.obj);
-		}
-		
-	};
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_expand);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.activity_expand);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlemain);
 		
 		initialData();
 		expandView=(ExpandableListView)findViewById(R.id.expandList);
-		expandView.setAdapter(new InfoAdapter(DetailActivity.this));
-		expandView.setOnGroupClickListener(new OnGroupClickListener() {
-			
-			@Override
-			public boolean onGroupClick(ExpandableListView parent, View v,
-					int groupPosition, long id) {
-				// TODO Auto-generated method stub
-				final int groupPos=groupPosition;
-				final String groupName=String.valueOf(groupPosition);
-				Runnable runnable=new Runnable(){
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						String url="http://192.168.1.108:8080/Servlet/apes";
-						HttpPost httpPost=new HttpPost(url);
-						ArrayList<NameValuePair> params=new ArrayList<NameValuePair>();
-						params.add(new BasicNameValuePair("itemName",groupName));
-						HttpResponse httpResponse=null;
-						
-						try {
-							httpPost.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
-							httpResponse=new DefaultHttpClient().execute(httpPost);
-							if(httpResponse.getStatusLine().getStatusCode()==200){
-								String result=EntityUtils.toString(httpResponse.getEntity());
-								mHandler.obtainMessage(groupPos,URLDecoder.decode(result, "utf-8")).sendToTarget();
-							}
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					
-				};
-				Log.i("qqqqqqqqqqqqqqqqqqqq", "waht");
-				new Thread(runnable).start();
-				return false;
-			}
-		});
+		expandView.setAdapter(adapter);
+//		expandView.setOnGroupClickListener(new OnGroupClickListener() {
+//			
+//			@Override
+//			public boolean onGroupClick(ExpandableListView parent, View v,
+//					int groupPosition, long id) {
+//				// TODO Auto-generated method stub
+//				final int groupPos=groupPosition;
+//				final String groupName=String.valueOf(groupPosition);
+//				Runnable runnable=new Runnable(){
+//
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						String url="http://172.20.200.148:8080/Servlet/apes";
+//						HttpPost httpPost=new HttpPost(url);
+//						ArrayList<NameValuePair> params=new ArrayList<NameValuePair>();
+//						params.add(new BasicNameValuePair("itemName",groupName));
+//						HttpResponse httpResponse=null;
+//						
+//						try {
+//							httpPost.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+//							httpResponse=new DefaultHttpClient().execute(httpPost);
+//							if(httpResponse.getStatusLine().getStatusCode()==200){
+//								String result=EntityUtils.toString(httpResponse.getEntity());
+//								mHandler.obtainMessage(groupPos,URLDecoder.decode(result, "utf-8")).sendToTarget();
+//							}
+//						} catch (Exception e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//					
+//				};
+//				Log.i("qqqqqqqqqqqqqqqqqqqq", "waht");
+//				new Thread(runnable).start();
+//				return false;
+//			}
+//		});
 	}
 
 	
