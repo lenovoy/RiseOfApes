@@ -13,8 +13,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import com.vivo.scoreprovider.Score;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,8 +28,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.TextView;
@@ -194,7 +200,7 @@ public class DetailActivity extends Activity {
 		
 	}
 	
-	
+	private Button ratingBtn;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +213,27 @@ public class DetailActivity extends Activity {
 		initialData();
 		expandView=(ExpandableListView)findViewById(R.id.expandList);
 		expandView.setAdapter(adapter);
+		
+		ratingBtn=(Button)findViewById(R.id.ratingBtn);
+        ratingBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Cursor cursor=getContentResolver().query(Score.uri, null, null, null, null);
+				Intent intent=new Intent(DetailActivity.this,RatingActivity.class);
+				float[] scores=new float[2];
+				for(int i=0;cursor.moveToNext();i++)
+					scores[i]=cursor.getFloat(0);
+				intent.putExtra("scores", scores);
+//				ArrayList<Float> scores=new ArrayList<Float>();
+//				while(cursor.moveToNext())
+//					scores.add(cursor.getFloat(2));
+//				intent.putExtra("scores", (Serializable)scores);
+				startActivity(intent);
+				overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+			}
+		});
 //		expandView.setOnGroupClickListener(new OnGroupClickListener() {
 //			
 //			@Override

@@ -1,7 +1,12 @@
 package com.vivo.riseofapes;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +16,14 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.vivo.scoreprovider.Score;
+
 
 public class MainActivity extends Activity {
 
 	private ImageView imag;
 	private Button titleBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +41,8 @@ public class MainActivity extends Activity {
 				overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 			}
 		});
+        
+        
         
     }
 
